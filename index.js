@@ -42,55 +42,55 @@ function beatmapParser() {
     return beatmap.timingPoints[0];
   };
 
-  /**
-   * Parse additions member
-   * @param  {String} str         additions member (sample:add:customSampleIndex:Volume:hitsound)
-   * @return {Object} additions   a list of additions
-   */
-  var parseAdditions = function (str) {
-    if (!str) return {};
+  // /**
+  //  * Parse additions member
+  //  * @param  {String} str         additions member (sample:add:customSampleIndex:Volume:hitsound)
+  //  * @return {Object} additions   a list of additions
+  //  */
+  // var parseAdditions = function (str) {
+  //   if (!str) return {};
 
-    var additions = {};
-    var adds      = str.split(':');
+  //   var additions = {};
+  //   var adds      = str.split(':');
 
-    if (adds[0] && adds[0] !== '0') {
-      var sample;
-      switch (adds[0]) {
-        case '1':
-          sample = 'normal';
-          break;
-        case '2':
-          sample = 'soft';
-          break;
-        case '3':
-          sample = 'drum';
-          break;
-      }
-      additions.sample = sample;
-    }
+  //   if (adds[0] && adds[0] !== '0') {
+  //     var sample;
+  //     switch (adds[0]) {
+  //       case '1':
+  //         sample = 'normal';
+  //         break;
+  //       case '2':
+  //         sample = 'soft';
+  //         break;
+  //       case '3':
+  //         sample = 'drum';
+  //         break;
+  //     }
+  //     additions.sample = sample;
+  //   }
 
-    if (adds[1] && adds[1] !== '0') {
-      var addSample;
-      switch (adds[1]) {
-        case '1':
-          addSample = 'normal';
-          break;
-        case '2':
-          addSample = 'soft';
-          break;
-        case '3':
-          addSample = 'drum';
-          break;
-      }
-      additions.additionalSample = addSample;
-    }
+  //   if (adds[1] && adds[1] !== '0') {
+  //     var addSample;
+  //     switch (adds[1]) {
+  //       case '1':
+  //         addSample = 'normal';
+  //         break;
+  //       case '2':
+  //         addSample = 'soft';
+  //         break;
+  //       case '3':
+  //         addSample = 'drum';
+  //         break;
+  //     }
+  //     additions.additionalSample = addSample;
+  //   }
 
-    if (adds[2] && adds[2] !== '0') { additions.customSampleIndex = parseInt(adds[2]); }
-    if (adds[3] && adds[3] !== '0') { additions.hitsoundVolume    = parseInt(adds[3]); }
-    if (adds[4])                    { additions.hitsound          = adds[4]; }
+  //   if (adds[2] && adds[2] !== '0') { additions.customSampleIndex = parseInt(adds[2]); }
+  //   if (adds[3] && adds[3] !== '0') { additions.hitsoundVolume    = parseInt(adds[3]); }
+  //   if (adds[4])                    { additions.hitsound          = adds[4]; }
 
-    return additions;
-  };
+  //   return additions;
+  // };
 
   /**
    * Parse a timing line
@@ -103,12 +103,12 @@ function beatmapParser() {
       offset:            parseInt(members[0]),
       beatLength:        parseFloat(members[1]),
       velocity:          1,
-      timingSignature:   parseInt(members[2]),
-      sampleSetId:       parseInt(members[3]),
-      customSampleIndex: parseInt(members[4]),
-      sampleVolume:      parseInt(members[5]),
-      timingChange:      (members[6] == 1),
-      kiaiTimeActive:    (members[7] == 1)
+      // timingSignature:   parseInt(members[2]),
+      // sampleSetId:       parseInt(members[3]),
+      // customSampleIndex: parseInt(members[4]),
+      // sampleVolume:      parseInt(members[5]),
+      // timingChange:      (members[6] == 1),
+      // kiaiTimeActive:    (members[7] == 1)
     };
 
     if (!isNaN(timingPoint.beatLength) && timingPoint.beatLength !== 0) {
@@ -134,13 +134,13 @@ function beatmapParser() {
   var parseHitObject = function (line) {
     members = line.split(',');
 
-    var soundType  = members[4];
+    // var soundType  = members[4];
     var objectType = members[3];
 
     var hitObject = {
       startTime:  parseInt(members[2]),
-      newCombo:   ((objectType & 4) == 4),
-      soundTypes: [],
+      // newCombo:   ((objectType & 4) == 4),
+      // soundTypes: [],
       position: [
         parseInt(members[0]),
         parseInt(members[1])
@@ -153,11 +153,11 @@ function beatmapParser() {
      * 2 : whistle
      * 4 : finish
      * 8 : clap
-     */
-    if ((soundType & 2) == 2)              { hitObject.soundTypes.push('whistle'); }
-    if ((soundType & 4) == 4)              { hitObject.soundTypes.push('finish');  }
-    if ((soundType & 8) == 8)              { hitObject.soundTypes.push('clap');    }
-    if (hitObject.soundTypes.length === 0) { hitObject.soundTypes.push('normal'); }
+    //  */
+    // if ((soundType & 2) == 2)              { hitObject.soundTypes.push('whistle'); }
+    // if ((soundType & 4) == 4)              { hitObject.soundTypes.push('finish');  }
+    // if ((soundType & 8) == 8)              { hitObject.soundTypes.push('clap');    }
+    // if (hitObject.soundTypes.length === 0) { hitObject.soundTypes.push('normal'); }
 
     /**
      * object type is a bitwise flag enum
@@ -169,21 +169,22 @@ function beatmapParser() {
       // Circle
       beatmap.nbCircles++;
       hitObject.objectName = 'circle';
-      hitObject.additions  = parseAdditions(members[5]);
+      // hitObject.additions  = parseAdditions(members[5]);
     } else if ((objectType & 8) == 8) {
       // Spinner
       beatmap.nbSpinners++;
       hitObject.objectName = 'spinner';
       hitObject.endTime    = parseInt(members[5]);
-      hitObject.additions  = parseAdditions(members[6]);
+      // hitObject.additions  = parseAdditions(members[6]);
     } else if ((objectType & 2) == 2) {
       // Slider
       beatmap.nbSliders++;
       hitObject.objectName  = 'slider';
       hitObject.repeatCount = parseInt(members[6]);
       hitObject.pixelLength = parseInt(members[7]);
-      hitObject.additions   = parseAdditions(members[10]);
-      hitObject.edges       = [];
+      // hitObject.additions   = parseAdditions(members[10]);
+      // hitObject.edges       = [];
+      hitObject.edges       = hitObject.repeatCount + 1;
       hitObject.points      = [
         [hitObject.position[0], hitObject.position[1]]
       ];
@@ -202,57 +203,58 @@ function beatmapParser() {
       /**
        * Parse slider points
        */
-      var points = (members[5] || '').split('|');
-      if (points.length) {
-        hitObject.curveType = curveTypes[points[0]] || 'unknown';
+      // var points = (members[5] || '').split('|');
+      // if (points.length) {
+      //   hitObject.curveType = curveTypes[points[0]] || 'unknown';
 
-        for (var i = 1, l = points.length; i < l; i++) {
-          var coordinates = points[i].split(':');
-          hitObject.points.push([
-            parseInt(coordinates[0]),
-            parseInt(coordinates[1])
-          ]);
-        }
-      }
+      //   for (var i = 1, l = points.length; i < l; i++) {
+      //     var coordinates = points[i].split(':');
+      //     hitObject.points.push([
+      //       parseInt(coordinates[0]),
+      //       parseInt(coordinates[1])
+      //     ]);
+      //   }
+      // }
 
-      var edgeSounds    = [];
-      var edgeAdditions = [];
-      if (members[8]) { edgeSounds    = members[8].split('|'); }
-      if (members[9]) { edgeAdditions = members[9].split('|'); }
+      // var edgeSounds    = [];
+      // var edgeAdditions = [];
+      // if (members[8]) { edgeSounds    = members[8].split('|'); }
+      // if (members[9]) { edgeAdditions = members[9].split('|'); }
 
-      /**
-       * Get soundTypes and additions for each slider edge
-       */
-      for (var j = 0, lgt = hitObject.repeatCount + 1; j < lgt; j++) {
-        var edge = {
-          soundTypes: [],
-          additions: parseAdditions(edgeAdditions[j])
-        };
+      // /**
+      //  * Get soundTypes and additions for each slider edge
+      //  */
+      // for (var j = 0, lgt = hitObject.repeatCount + 1; j < lgt; j++) {
+      //   var edge = {
+      //     soundTypes: [],
+      //     additions: parseAdditions(edgeAdditions[j])
+      //   };
 
-        if (edgeSounds[j]) {
-          var sound = edgeSounds[j];
-          if ((sound & 2) == 2)             { edge.soundTypes.push('whistle'); }
-          if ((sound & 4) == 4)             { edge.soundTypes.push('finish');  }
-          if ((sound & 8) == 8)             { edge.soundTypes.push('clap');    }
-          if (edge.soundTypes.length === 0) { edge.soundTypes.push('normal');  }
-        } else {
-          edge.soundTypes.push('normal');
-        }
+      //   if (edgeSounds[j]) {
+      //     var sound = edgeSounds[j];
+      //     if ((sound & 2) == 2)             { edge.soundTypes.push('whistle'); }
+      //     if ((sound & 4) == 4)             { edge.soundTypes.push('finish');  }
+      //     if ((sound & 8) == 8)             { edge.soundTypes.push('clap');    }
+      //     if (edge.soundTypes.length === 0) { edge.soundTypes.push('normal');  }
+      //   } else {
+      //     edge.soundTypes.push('normal');
+      //   }
 
-        hitObject.edges.push(edge);
-      }
+        // hitObject.edges.push(edge);
+        // hitObject.edges++;
+      // }
 
-      // get coordinates of the slider endpoint
-      var endPoint = slidercalc.getEndPoint(hitObject.curveType, hitObject.pixelLength, hitObject.points);
-      if (endPoint && endPoint[0] && endPoint[1]) {
-        hitObject.endPosition = [
-          Math.round(endPoint[0]),
-          Math.round(endPoint[1])
-        ];
-      } else {
-        // If endPosition could not be calculated, approximate it by setting it to the last point
-        hitObject.endPosition = hitObject.points[hitObject.points.length - 1];
-      }
+      // // get coordinates of the slider endpoint
+      // var endPoint = slidercalc.getEndPoint(hitObject.curveType, hitObject.pixelLength, hitObject.points);
+      // if (endPoint && endPoint[0] && endPoint[1]) {
+      //   hitObject.endPosition = [
+      //     Math.round(endPoint[0]),
+      //     Math.round(endPoint[1])
+      //   ];
+      // } else {
+      //   // If endPosition could not be calculated, approximate it by setting it to the last point
+      //   hitObject.endPosition = hitObject.points[hitObject.points.length - 1];
+      // }
     } else {
       // Unknown
       hitObject.objectName = 'unknown';
@@ -277,13 +279,13 @@ function beatmapParser() {
     members = line.split(',');
 
     if (members[0] == '0' && members[1] == '0' && members[2]) {
-      var bgName = members[2].trim();
+      // var bgName = members[2].trim();
 
-      if (bgName.charAt(0) == '"' && bgName.charAt(bgName.length - 1) == '"') {
-        beatmap.bgFilename = bgName.substring(1, bgName.length - 1);
-      } else {
-        beatmap.bgFilename = bgName;
-      }
+      // if (bgName.charAt(0) == '"' && bgName.charAt(bgName.length - 1) == '"') {
+      //   beatmap.bgFilename = bgName.substring(1, bgName.length - 1);
+      // } else {
+      //   beatmap.bgFilename = bgName;
+      // }
     } else if (members[0] == '2' && /^[0-9]+$/.test(members[1]) && /^[0-9]+$/.test(members[2])) {
       beatmap.breakTimes.push({
         startTime: parseInt(members[1]),
@@ -345,7 +347,8 @@ function beatmapParser() {
           break;
         case 'slider':
           var tickPerSide = Math.ceil((Math.floor(hitObject.pixelLength / tickLength * 100) / 100) - 1);
-          maxCombo += (hitObject.edges.length - 1) * (tickPerSide + 1) + 1;  // 1 combo for each tick and endpoint
+          // maxCombo += (hitObject.edges.length - 1) * (tickPerSide + 1) + 1;  // 1 combo for each tick and endpoint
+          maxCombo += (hitObject.edges - 1) * (tickPerSide + 1) + 1;
       }
     });
 
@@ -403,7 +406,7 @@ function beatmapParser() {
     }
 
     eventsLines.forEach(parseEvent);
-    beatmap.breakTimes.sort(function (a, b) { return (a.startTime > b.startTime ? 1 : -1); });
+    // beatmap.breakTimes.sort(function (a, b) { return (a.startTime > b.startTime ? 1 : -1); });
 
     timingLines.forEach(parseTimingPoint);
     beatmap.timingPoints.sort(function (a, b) { return (a.offset > b.offset ? 1 : -1); });
